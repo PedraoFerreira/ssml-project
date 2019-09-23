@@ -6,7 +6,8 @@ resource "aws_instance" "ssml-app-instance" {
 
   security_groups = [
     "${aws_security_group.allow_ssh.name}",
-    "${aws_security_group.allow_outbound.name}"
+    "${aws_security_group.allow_outbound.name}",
+    "${aws_security_group.allow_http.name}"
   ]
 
 /*
