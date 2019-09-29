@@ -1,0 +1,9 @@
+server {
+    listen 80;
+    server_name console.ssml.com.br;
+
+    location / {
+        proxy_pass http://unix:/home/{{ ansible_ssh_user }}/ssml-console/src/ssml.sock;
+    }
+
+}

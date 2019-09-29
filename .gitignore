@@ -68,13 +68,10 @@ venv.bak/
 .idea/
 
 # Terraform
-# -Compiled files
-*.tfstate
-*.tfstate.backup
 # -Module directory
-/devops/.terraform/
+.terraform/
 # -Sensitive Files
-/devops/variables.tf
+*.tfvars
 
 #
 /src/uploads/

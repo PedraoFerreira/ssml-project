@@ -2,6 +2,7 @@ resource "aws_instance" "ssml-app-instance" {
   ami           = "${data.aws_ami.ubuntu.id}" #"ami-07d0cf3af28718ef8"
   instance_type = "t2.micro"
   key_name      = "${aws_key_pair.ssml-key.key_name}"
+  #user_data = "${file("user_data/config-server.sh")}"
 
 
   security_groups = [
@@ -9,22 +10,20 @@ resource "aws_instance" "ssml-app-instance" {
     "${aws_security_group.allow_outbound.name}",
     "${aws_security_group.allow_http.name}"
   ]
-
 /*
   provisioner "remote-exec" {
-    inline = [
-      "command curl -sSL https://rvm.io/mpapis.asc | gpg --import -",
-      "\\curl -sSL https://get.rvm.io | bash -s stable --rails",
-    ]
+    inline = ["echo 'Hello World'"]
 
     connection {
-      type          = "ssh"
-      user          = "ubuntu"
-      private_key   = "${file("~/.ssh/ssml_key")}"
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = "${file("${var.private_key_path}")}"
     }
   }
+  provisioner "local-exec" {
+    command = "ansible-playbook -i '${aws_instance.ssml-app-instance.public_ip},' --private-key ${var.private_key_path} ../ansible/deploy.yml"
+  }
 */
-
   tags {
     type = "ec2-app"
   }

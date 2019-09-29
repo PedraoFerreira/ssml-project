@@ -1,5 +1,7 @@
 import os
 from flask import Flask, render_template, request
+import boto3
+import uuid
 
 __author__ = 'ssml'
 
@@ -27,6 +29,16 @@ def upload():
         destination = "/".join([target, filename])
         print(destination)
         file.save(destination)
+
+    ## Colocar credenciar na SESSAO DO OS ou CRIAR ARQUIVOS NO OS
+    s3_client = boto3.client('s3',
+                             aws_access_key_id='AKIASDY73AT2L2NHAWH6',
+                             aws_secret_access_key='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'
+                             )
+
+    s3filename = uuid.uuid4()
+
+    s3_client.upload_file(destination, '', s3filename)
 
     return render_template("complete.html")
 

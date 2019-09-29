@@ -1,0 +1,6 @@
+ssml-server:
+  hosts:
+    3.228.81.75:
+  vars:
+    ansible_ssh_user: ubuntu
+    ansible_python_interpreter: /usr/bin/python3

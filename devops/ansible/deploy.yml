@@ -1,0 +1,78 @@
+---
+# Install system apt packages
+- hosts: ssml-server
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: install packages
+    apt: name={{item}} state=present
+    with_items:
+      - tree         # Optional
+      - python3-pip
+      - python3-dev
+      - nginx
+      - gunicorn3
+      - git-core
+  - name: send private key of git repository
+    copy:
+      src: ../ssh-keys/gitrepo
+      dest: /home/{{ ansible_ssh_user }}/.ssh/gitrepo
+  - name: clone repo
+    git:
+      repo: 'git@bitbucket.org:ssml-project/ssml-console.git'
+      dest: /home/{{ ansible_ssh_user }}/ssml-console/
+      accept_hostkey: yes
+      key_file: /home/{{ ansible_ssh_user }}/.ssh/gitrepo
+      update: yes  # Does a git pull if the repo already exists
+  - name: Recursively change ownership of a repository directory
+    file:
+      path: /home/{{ ansible_ssh_user }}/ssml-console/
+      state: directory
+      recurse: yes
+      owner: "{{ ansible_ssh_user }}"
+      group: "{{ ansible_ssh_user }}"
+  - name: Install virtualenv via pip
+    pip:
+      name: virtualenv
+      executable: pip3
+
+
+# Install the app, note: don't do these tasks with become sudo
+- hosts: ssml-server
+  tasks:
+  - name: install modules in a virtualenv
+    pip:
+      requirements: /home/{{ ansible_ssh_user }}/ssml-console/requirements.txt
+      virtualenv: /home/{{ ansible_ssh_user }}/venv-ssml-console
+      virtualenv_python: python3.6
+
+# Configure app systemd service and nginx
+- hosts: ssml-server
+  become: yes
+  become_method: sudo
+  tasks:
+  - name: template systemd service config
+    template:
+      src: .gunicorn3-ssml.service
+      dest: /etc/systemd/system/gunicorn3-ssml.service
+  - name: start systemd app service
+    systemd: name=gunicorn3-ssml state=restarted enabled=yes
+  - name: template nginx site config
+    template:
+      src: .nginx
+      dest: /etc/nginx/sites-available/ssml
+  #- name: remove default nginx site config
+  #  file: path=/etc/nginx/sites-enabled/default state=absent
+  # - command: mv /etc/nginx/sites-enabled/default /tmp/nginx.sites-enabled.default
+  #- name: enable nginx site
+  #  file:
+  #    src: /etc/nginx/sites-available/ssml
+  #    dest: /etc/nginx/sites-enabled/default
+  #    state: link
+  #    force: yes
+  - name: restart nginx
+    systemd: name=nginx state=restarted enabled=yes
+  - name: open firewall for nginx
+    ufw:
+      rule: allow
+      name: Nginx Full
