@@ -21,3 +21,11 @@ variable "private_key_path" {
   description = "Path to the private SSH key, used to access the instance."
   default     = "../ssh-keys/ssml_key"
 }
+
+variable "ssml_default_tags" {
+    type = "map"
+    default = {
+        project = "ssml",
+        app = "console-ssml"
+  }
+}

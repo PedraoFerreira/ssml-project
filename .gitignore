@@ -68,10 +68,14 @@ venv.bak/
 .idea/
 
 # Terraform
-# -Module directory
 .terraform/
-# -Sensitive Files
 *.tfvars
 
-#
+#Ansible
+*.retry
+
+#AWS
+.aws
+
+#App
 /src/uploads/

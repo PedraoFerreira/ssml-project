@@ -2,7 +2,7 @@ resource "aws_instance" "ssml-app-instance" {
   ami           = "${data.aws_ami.ubuntu.id}" #"ami-07d0cf3af28718ef8"
   instance_type = "t2.micro"
   key_name      = "${aws_key_pair.ssml-key.key_name}"
-  #user_data = "${file("user_data/config-server.sh")}"
+  user_data = "${file("user_data/config-server.sh")}"
 
 
   security_groups = [
@@ -24,7 +24,7 @@ resource "aws_instance" "ssml-app-instance" {
     command = "ansible-playbook -i '${aws_instance.ssml-app-instance.public_ip},' --private-key ${var.private_key_path} ../ansible/deploy.yml"
   }
 */
-  tags {
-    type = "ec2-app"
-  }
+  tags = "${merge(map(
+        "type", "ec2-app",
+    ), var.ssml_default_tags)}"
 }

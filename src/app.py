@@ -17,31 +17,25 @@ def index():
 
 @app.route("/upload", methods=['POST'])
 def upload():
-    target = os.path.join(APP_ROOT, 'uploads/')
+    target = os.path.join(APP_ROOT, 'uploads')
     print(target)
 
     if not os.path.isdir(target):
         os.mkdir(target)
 
+    session = boto3.Session(profile_name='default')
+    s3_client = session.client('s3')
+
     for file in request.files.getlist("file"):
-        print(file)
-        filename = file.filename
+        filename =  str(uuid.uuid4()) + os.path.splitext(file.filename)[1]
         destination = "/".join([target, filename])
-        print(destination)
-        file.save(destination)
-
-    ## Colocar credenciar na SESSAO DO OS ou CRIAR ARQUIVOS NO OS
-    s3_client = boto3.client('s3',
-                             aws_access_key_id='AKIASDY73AT2L2NHAWH6',
-                             aws_secret_access_key='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'
-                             )
-
-    s3filename = uuid.uuid4()
-
-    s3_client.upload_file(destination, '', s3filename)
+        try:
+            file.save(destination)
+            s3_client.upload_file(destination, 'user-data-upload', filename)
+        finally:
+            os.remove(destination)
 
     return render_template("complete.html")
-
 
 if __name__ == "__main__":
     app.run(port=4555, debug=True)

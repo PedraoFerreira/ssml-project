@@ -6,5 +6,5 @@ After=network.target
 User={{ ansible_ssh_user }}
 Group=www-data
 WorkingDirectory=/home/{{ ansible_ssh_user }}/ssml-console/src/
-Environment="PATH=/home/{{ ansible_ssh_user }}/venv-ssml-console/bin"
-ExecStart=/usr/bin/gunicorn3 --workers 3 --bind unix:ssml.sock -m 007 app:app
+Environment="PATH=/home/{{ ansible_ssh_user }}/ssml-console/venv/bin"
+ExecStart=/home/{{ ansible_ssh_user }}/ssml-console/venv/bin/gunicorn --workers 3 --bind unix:ssml.sock -m 007 app:app
