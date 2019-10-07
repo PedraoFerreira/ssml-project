@@ -63,9 +63,13 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+venv-lambda/
 
 # Pycharm
 .idea/
+
+# VS Code
+.vscode
 
 # Terraform
 .terraform/

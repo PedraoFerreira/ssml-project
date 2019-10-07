@@ -29,3 +29,14 @@ variable "ssml_default_tags" {
         app = "console-ssml"
   }
 }
+
+variable "lambda_function_path" {
+  description = "Path to lambda_function folder"
+  default     = "../../lambda-function"
+}
+
+variable "virtualenv_path" {
+  description = "Path to pip3"
+  default     = "../../lambda-function/venv-lambda"
+}
+
