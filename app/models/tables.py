@@ -1,5 +1,6 @@
 from app import db
 
+
 class User(db.Model):
     __tablename__ = 'user'
 
@@ -15,5 +16,5 @@ class User(db.Model):
         self.name = name
         self.email = email
 
-    #del __repr__(self):
-    #    return "<User %r>" % self.username
+    def __repr__(self):
+        return "<User %r>" % self.username

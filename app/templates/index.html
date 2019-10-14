@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<div class="col-md-12 intro-info order-md-first order-last">
+  <h3><br><span> Selecione um arquivo de dados para realizar a predição utilizando Machine Learning</span></h3>
+  <form id="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
+
+    <input id="file-picker" type="file" name="file" accept=".xls,.csv,.xlsx" >
+    <div id="msg"></div>
+    <br>
+    <input type="submit" value="Processar dados" class="btn-get-started scrollto" id="upload-button">
+  </form>
+</div>
+
+{% endblock %}

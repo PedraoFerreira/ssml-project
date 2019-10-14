@@ -8,7 +8,7 @@ import requests as req
 
 @app.route("/")
 def index():
-    return render_template("upload.html")
+    return render_template("index.html")
 
 
 def exec_linear_regression(file_name):
