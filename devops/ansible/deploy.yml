@@ -50,10 +50,6 @@
       requirements: /home/{{ ansible_ssh_user }}/ssml-console/requirements.txt
       virtualenv: /home/{{ ansible_ssh_user }}/ssml-console/venv
       virtualenv_python: python3.6
-  - name: Echo my_env_var
-    shell: "echo $SSML_CONFIG_CLASS"
-    environment:
-      SSML_CONFIG_CLASS: config.Development
 
 # Configure app systemd service and nginx
 - hosts: ssml-server

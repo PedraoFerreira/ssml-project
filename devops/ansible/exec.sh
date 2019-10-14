@@ -1,0 +1,1 @@
+ansible-playbook --private-key ../ssh-keys/ssml_key deploy.yml

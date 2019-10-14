@@ -4,7 +4,7 @@ server {
     client_max_body_size 10M;
 
     location / {
-        proxy_pass http://unix:/home/{{ ansible_ssh_user }}/ssml-console/src/ssml.sock;
+        proxy_pass http://unix:/home/{{ ansible_ssh_user }}/ssml-console/ssml.sock;
     }
 
 }
