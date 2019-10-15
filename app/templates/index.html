@@ -4,10 +4,29 @@
 <div class="col-md-12 intro-info order-md-first order-last">
   <h3><br><span> Selecione um arquivo de dados para realizar a predição utilizando Machine Learning</span></h3>
   <form id="upload-form" action="{{ url_for('upload') }}" method="POST" enctype="multipart/form-data">
-
-    <input id="file-picker" type="file" name="file" accept=".xls,.csv,.xlsx" >
-    <div id="msg"></div>
     <br>
+    <input id="file-picker" type="file" name="file" accept=".xls,.csv,.xlsx" >
+
+    <br><br>
+    <div class="control">
+      <label class="radio">
+        <input type="radio" name="modeltype" value="regr" checked>
+        Regressão Linear
+      </label>
+      <label class="radio">
+        <input type="radio" name="modeltype" value="clus" disabled>
+        Clusterização
+      </label>
+      <label class="radio" disabled>
+        <input type="radio" name="modeltype" value="clas">
+        Classificação
+      </label>
+    </div>
+
+    <br>
+    <input class="input" name="predcol" type="text" placeholder="Campo para previsão">
+
+    <br><br>
     <input type="submit" value="Processar dados" class="btn-get-started scrollto" id="upload-button">
   </form>
 </div>

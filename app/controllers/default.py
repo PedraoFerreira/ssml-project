@@ -5,13 +5,12 @@ import boto3
 import uuid
 import requests as req
 
-
 @app.route("/")
 def index():
     return render_template("index.html")
 
 
-def exec_linear_regression(file_name):
+def exec_ml(file_name, pred_col, model_type):
     body = {
         "s3bucket": {
             "origin": "user-data-upload",
@@ -20,14 +19,14 @@ def exec_linear_regression(file_name):
         "file": {
             "name": file_name,
             "extension": "csv",
-            "delimiter": ";"
+            "delimiter": ","
         },
-        "pred_col": "SalePrice"
+        "pred_col": pred_col,
+        "model_type": model_type
     }
-    print(app.config['URL_LAMBDA_LINEAR_REGRESSION'])
-    # result = req.post(app.config['URL_LAMBDA_LINEAR_REGRESSION'] ,body=body)
+    result = req.post(app.config['URL_LAMBDA_ML'], json=body)
 
-    return True
+    return result.status_code == 200
 
 @app.route("/upload", methods=['POST'])
 def upload():
@@ -43,12 +42,22 @@ def upload():
     for file in request.files.getlist("file"):
         filename = str(uuid.uuid4()) + os.path.splitext(file.filename)[1]
         destination = "/".join([target, filename])
+
+    model_type = request.form['modeltype']
+    pred_col = request.form['predcol']
+
+    if filename:
         try:
             file.save(destination)
             s3_client.upload_file(destination, 'user-data-upload', filename)
-            if exec_linear_regression(filename):
-                return send_from_directory(directory=target, filename=filename)
         finally:
             os.remove(destination)
+
+        if exec_ml(filename, pred_col, model_type):
+            try:
+                s3_client.download_file('user-data-upload-output', filename, destination)
+                return send_from_directory(directory=target, filename=filename)
+            finally:
+                os.remove(destination)
 
     return render_template("complete.html")
