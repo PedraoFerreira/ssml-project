@@ -35,8 +35,8 @@ resource "aws_lambda_function" "lambda_linear_regretion" {
   role             = "${aws_iam_role.iam_for_lambda.arn}"
   handler          = "main.lambda_handler"
   runtime          = "python3.6"
-  timeout          = 120
-  memory_size      = 256
+  timeout          = 180
+  memory_size      = 512
 
   environment {
     variables = {
